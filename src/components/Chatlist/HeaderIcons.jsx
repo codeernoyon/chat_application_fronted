@@ -75,7 +75,7 @@ const HeaderIcons = () => {
         </div>
 
         {/* message */}
-        <div className="cursor-pointer">
+        <div className="cursor-pointer" onClick={() => showWithSlide("new")}>
           <MdMessage className="text-[25px] 2xl:text-[33px]" />
         </div>
         {/* options */}

@@ -6,14 +6,14 @@ import VideoCall from "../Call/VideoCall";
 import VoiceCall from "../Call/VoiceCall";
 
 const MessageHeader = () => {
-  const [{ userInfo }] = useStateProvider();
+  const [{ currentMessageUser }] = useStateProvider();
   return (
     <div className="py-2 px-5 pr-8 bg-panel-header-background2 flex justify-between items-center">
       {/* --------- image & status ---------- */}
       <div className="flex items-center gap-5">
         {/* image */}
         <Image
-          src={userInfo?.imageUrl}
+          src={currentMessageUser?.imageUrl}
           alt="photo"
           height={50}
           width={50}
@@ -21,7 +21,9 @@ const MessageHeader = () => {
         />
         <div className="flex flex-col">
           {/* name */}
-          <span className="text-[18px] font-medium">{userInfo?.name}</span>
+          <span className="text-[18px] font-medium">
+            {currentMessageUser?.name}
+          </span>
           {/* active status */}
           <span className="text-sm text-slate-500">active status</span>
         </div>

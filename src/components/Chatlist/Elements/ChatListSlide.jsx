@@ -2,6 +2,7 @@ import { useStateProvider } from "@/context/StateContext";
 import { reducerCase } from "@/context/constants";
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import GroupSlide from "./GroupSlide";
+import NewMessage from "./NewMessage";
 import ProfileSlide from "./ProfileSlide";
 import SettingSlide from "./SettingSlide";
 
@@ -35,6 +36,7 @@ const ChatListSlide = ({ status, option }) => {
       <div>{option === "profile" && <ProfileSlide />}</div>
       <div>{option === "group" && <GroupSlide />}</div>
       <div>{option === "setting" && <SettingSlide />}</div>
+      <div>{option === "new" && <NewMessage />}</div>
     </div>
   );
 };

@@ -5,10 +5,10 @@ import MessageHeader from "./MessageHeader";
 import MessageSender from "./MessageSender";
 
 const Message = () => {
-  const [{ showMessage }] = useStateProvider();
+  const [{ showMessageCurrentUser }] = useStateProvider();
   return (
     <div className="col-span-9 w-full  ">
-      {showMessage ? (
+      {showMessageCurrentUser ? (
         <>
           <MessageHeader />
           <MessageContainer />
