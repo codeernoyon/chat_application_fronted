@@ -6,6 +6,8 @@ export const initialState = {
   showMessageCurrentUser: false,
   allUsersFromDb: [],
   currentMessageUser: {},
+  allMessages: [],
+  socket: undefined,
 };
 
 export const reducer = (state, action) => {
@@ -24,7 +26,6 @@ export const reducer = (state, action) => {
       };
     // show message
     case reducerCase.SHOW_MESSAGE_CURRENT_USER:
-      console.log({ ...state });
       return {
         ...state,
         showMessageCurrentUser: action.showMessageCurrentUser,
@@ -40,6 +41,24 @@ export const reducer = (state, action) => {
       return {
         ...state,
         currentMessageUser: action.currentMessageUser,
+      };
+    // set all message  save
+    case reducerCase.ALL_MESSAGES:
+      return {
+        ...state,
+        allMessages: action.allMessages,
+      };
+    // set all message  save
+    case reducerCase.ADD_MESSAGE:
+      return {
+        ...state,
+        allMessages: [...state.allMessages, action.newMessage],
+      };
+    // set socket
+    case reducerCase.SET_SOCKET:
+      return {
+        ...state,
+        socket: action.socket,
       };
     default:
       return state;

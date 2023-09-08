@@ -7,6 +7,7 @@ function ChatListHeader() {
   return (
     <div className="w-full">
       <HeaderIcons />
+      {/* search ber for searching */}
       <SearchBar
         placeHolder="Search or Start new chat"
         click={handleSearchClick}
