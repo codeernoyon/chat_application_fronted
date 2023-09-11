@@ -37,11 +37,12 @@ const MessageSender = () => {
       console.log(error);
     }
   };
+
   return (
-    <div className="bg-panel-header-background2 py-3 px-8">
+    <div className="bg-panel-header-background2 py-3 px-8 relative">
       {/* container */}
       <div className="flex items-center gap-7">
-        <Emoji />
+        <Emoji message={message} setMessage={setMessage} />
         <AttachFile />
         <MessageSenderInput message={message} setMessage={setMessage} />
         <SendMessage message={message} messageSend={handleMessageSender} />
