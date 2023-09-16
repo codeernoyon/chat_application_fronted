@@ -1,14 +1,18 @@
 import PhotoPicker from "@/components/common/PhotoPicker";
 import { useStateProvider } from "@/context/StateContext";
+import { reducerCase } from "@/context/constants";
+import { SENDMESSAGE } from "@/utils/ApiRoutes";
 import { storage } from "@/utils/FirebaseConfig";
-import { uploadFiles } from "@/utils/fireBase";
-import imageCompression from "browser-image-compression";
+import { deleteImageObject, uploadFiles } from "@/utils/fireBase";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { ImAttachment } from "react-icons/im";
 
 const AttachFile = () => {
   const [showPhotoPicker, setShowPhotoPicker] = useState(false);
-  const [{ userInfo }] = useStateProvider();
+  const [compressImg, setCompressImg] = useState("");
+  const [{ userInfo, currentMessageUser, socket }, dispatch] =
+    useStateProvider();
   // handle photo picker
   const handlePhotoPicker = () => {
     setShowPhotoPicker(true);
@@ -28,8 +32,8 @@ const AttachFile = () => {
       if (file.size > 3000000) {
         return;
       }
-      // store image with file type
-      let compressImg;
+      // // store image with file type
+      let fileType;
 
       // check type for compress image with file type
       if (
@@ -38,14 +42,34 @@ const AttachFile = () => {
         file.type === "image/png" ||
         file.type === "image/svg+xml"
       ) {
-        compressImg = await imageCompression(file, option);
+        fileType = "image";
       } else {
-        compressImg = file;
+        fileType = "file";
       }
+      // create folder with email account name
       const folder = `messages/${userInfo?.email}`;
-      const messageUrl = await uploadFiles(storage, folder, [compressImg]);
-      console.log(messageUrl);
+      // upload image firebase && get image link
+      const messageUrl = await uploadFiles(storage, folder, [file]);
+      setCompressImg(messageUrl);
+      // call api for send message in backend
+      const { data } = await axios.post(SENDMESSAGE, {
+        email: userInfo?.email,
+        message: messageUrl[0],
+        sender: userInfo?._id,
+        receiver: currentMessageUser?._id,
+        fileType,
+      });
+      // socket event listener
+      socket.current.emit("send_message", {
+        ...data.data,
+      });
+      // add message live on global state
+      dispatch({
+        type: reducerCase.ADD_MESSAGE,
+        newMessage: { ...data.data },
+      });
     } catch (error) {
+      deleteImageObject(compressImg, storage);
       console.log(error);
     }
   };

@@ -24,7 +24,7 @@
     "socket.io-client": "^4.6.1",
     "tailwindcss": "^3.3.2",
     "uuid": "^9.0.0",
-    "wavesurfer.js": "^6.6.3",
+    "wavesurfer.js": "^7.3.2",
     "zego-express-engine-webrtc": "2.24.5"
   }
 }

@@ -1,8 +1,11 @@
 import { useStateProvider } from "@/context/StateContext";
+import dynamic from "next/dynamic";
 import EmptyMessage from "../Chatlist/Elements/EmptyMessage";
-import MessageContainer from "./MessageContainer";
 import MessageHeader from "./MessageHeader";
 import MessageSender from "./MessageSender";
+const MessageContainer = dynamic(() => import("./MessageContainer"), {
+  loading: () => <p>loading .....</p>,
+});
 
 const Message = () => {
   const [{ showMessageCurrentUser }] = useStateProvider();

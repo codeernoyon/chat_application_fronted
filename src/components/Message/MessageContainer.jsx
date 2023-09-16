@@ -3,6 +3,7 @@ import { reducerCase } from "@/context/constants";
 import { GETALLMESSAGE } from "@/utils/ApiRoutes";
 import { calculateTime } from "@/utils/CalculateTime";
 import axios from "axios";
+import Image from "next/image";
 import { useEffect } from "react";
 import MessageStatus from "../common/MessageStatus";
 
@@ -36,18 +37,40 @@ const MessageContainer = () => {
             {allMessages?.map((message) => (
               <li
                 key={message._id}
-                className={` w-fit py-2 px-3 rounded-xl flex gap-2 ${
+                className={` w-fit px-3 rounded-xl flex gap-2 ${
                   currentMessageUser?._id === message.receiver
                     ? "self-end bg-green-900"
                     : "self-start bg-panel-header-background2"
-                }  `}
+                } ${
+                  message?.fileType === "image"
+                    ? "flex-col py-3"
+                    : "flex-row py-2"
+                } `}
               >
                 {/* text */}
-                <div>
-                  <span className="text-[18px]">{message.message}</span>
-                </div>
+                {message?.fileType === "text" && (
+                  <div>
+                    <span className="text-[18px]">{message.message}</span>
+                  </div>
+                )}
+                {/* text */}
+                {message?.fileType === "image" && (
+                  <div>
+                    <Image
+                      src={message.message}
+                      alt="photo"
+                      height={200}
+                      width={200}
+                      className="rounded-md"
+                    />
+                  </div>
+                )}
                 {/* time && icon */}
-                <div className="text-sm flex items-center gap-1 relative top-[10px] text-slate-400">
+                <div
+                  className={`text-sm flex items-center gap-1 relative top-[10px] text-slate-400 ${
+                    message?.fileType === "image" ? "self-end" : "self-start"
+                  }`}
+                >
                   <span>{calculateTime(message?.createdAt)}</span>
                   {userInfo?._id === message?.sender && (
                     <MessageStatus messageStatus={message?.status} />
