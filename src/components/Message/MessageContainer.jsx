@@ -1,40 +1,39 @@
 import { useStateProvider } from "@/context/StateContext";
-import { reducerCase } from "@/context/constants";
-import { GETALLMESSAGE } from "@/utils/ApiRoutes";
 import { calculateTime } from "@/utils/CalculateTime";
-import axios from "axios";
+import dynamic from "next/dynamic";
 import Image from "next/image";
-import { useEffect } from "react";
-import MessageStatus from "../common/MessageStatus";
+import { useEffect, useState } from "react";
+const MessageStatus = dynamic(() => import("../common/MessageStatus"), {
+  ssr: false,
+});
+const AudioMessage = dynamic(() => import("./Elements/AudioMessage"), {
+  ssr: false,
+});
 
 const MessageContainer = () => {
   const [{ userInfo, currentMessageUser, allMessages }, dispatch] =
     useStateProvider();
+  const [filterMessages, setFilterMessages] = useState(null);
 
   // ---------- import all messages from database ------
   useEffect(() => {
-    const getAllMessages = async () => {
-      // api hit url and get all messages
-      const { data } = await axios.get(
-        `${GETALLMESSAGE}/${userInfo?.email}/${userInfo?._id}/${currentMessageUser?._id}`
-      );
+    const messages = allMessages.filter(
+      (message) =>
+        (message.receiver === currentMessageUser._id &&
+          message.sender === userInfo._id) ||
+        (message.receiver === userInfo._id &&
+          message.sender === currentMessageUser._id)
+    );
+    setFilterMessages(messages);
+  }, [allMessages]);
 
-      // store all messages in stats variable
-      dispatch({
-        type: reducerCase.ALL_MESSAGES,
-        allMessages: data.allMessages,
-      });
-    };
-
-    getAllMessages();
-  }, []);
   return (
     <div className="h-[82.5vh]">
       <div className="relative h-full bg-chat-background bg-opacity-35 before:absolute before:top-0 before:h-full before:w-full before:bg-panel-header-background before:bg-opacity-95 before:z-[10] bg-fixed overflow-hidden">
         {/* --------- container ----- */}
         <div className="relative z-[11] ">
           <ul className="flex  flex-col gap-2 items-end overflow-hidden overflow-y-scroll px-5 py-2 h-[82.5vh]">
-            {allMessages?.map((message) => (
+            {filterMessages?.map((message) => (
               <li
                 key={message._id}
                 className={` w-fit px-3 rounded-xl flex gap-2 ${
@@ -53,7 +52,7 @@ const MessageContainer = () => {
                     <span className="text-[18px]">{message.message}</span>
                   </div>
                 )}
-                {/* text */}
+                {/* image */}
                 {message?.fileType === "image" && (
                   <div>
                     <Image
@@ -64,6 +63,10 @@ const MessageContainer = () => {
                       className="rounded-md"
                     />
                   </div>
+                )}
+                {/* audio */}
+                {message?.fileType === "audio" && (
+                  <AudioMessage message={message} />
                 )}
                 {/* time && icon */}
                 <div

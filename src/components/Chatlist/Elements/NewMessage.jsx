@@ -1,31 +1,56 @@
 import SearchBar from "@/components/common/SearchBar";
 import { useStateProvider } from "@/context/StateContext";
 import { reducerCase } from "@/context/constants";
-import { GETUSERS } from "@/utils/ApiRoutes";
+import { GETALLMESSAGE, GETUSERS } from "@/utils/ApiRoutes";
 import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const NewMessage = () => {
-  const [{ userInfo }, dispatch] = useStateProvider();
+  const [{ userInfo, currentMessageUser }, dispatch] = useStateProvider();
   const [allUsers, setAllUsers] = useState([]);
-
+  const [loading, setLoading] = useState(false);
   // ------ handle search click function -----
   const handleSearchClick = () => {};
 
   // -------- handle profile click function -----------
-  const handleProfileClick = (e, user) => {
+  const handleProfileClick = async (e, user) => {
     e.stopPropagation();
-    // set data for show message user
+
+    // set user for start loading
     dispatch({
-      type: reducerCase.SHOW_MESSAGE_CURRENT_USER,
-      showMessageCurrentUser: true,
+      type: reducerCase.LOADING,
+      loading: true,
     });
     // set user for current message user
     dispatch({
       type: reducerCase.CURRENT_MESSAGE_USER,
       currentMessageUser: { ...user },
     });
+    // set data for show message user
+    dispatch({
+      type: reducerCase.SHOW_MESSAGE_CURRENT_USER,
+      showMessageCurrentUser: true,
+    });
+    try {
+      // api hit url and get all messages
+      const { data } = await axios.get(
+        `${GETALLMESSAGE}/${userInfo?.email}/${userInfo?._id}/${user?._id}`
+      );
+
+      // store all messages in stats variable
+      dispatch({
+        type: reducerCase.ALL_MESSAGES,
+        allMessages: data.allMessages,
+      });
+      // set user for  end loading
+      dispatch({
+        type: reducerCase.LOADING,
+        loading: false,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {

@@ -7,4 +7,5 @@ export const reducerCase = {
   ALL_MESSAGES: "ALL_MESSAGES",
   ADD_MESSAGE: "ADD_MESSAGE",
   SET_SOCKET: "SET_SOCKET",
+  LOADING: "LOADING",
 };

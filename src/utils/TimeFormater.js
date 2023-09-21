@@ -6,7 +6,7 @@ export const timeFormater = (seconds) => {
 
   const hoursStr = hours.toString().padStart(2, "0");
   const minutesStr = minutes.toString().padStart(2, "0");
-  const secondsStr = remainingSeconds.toString().padStart(2, "0");
+  const secondsStr = remainingSeconds.toFixed(0).toString().padStart(2, "0");
 
   return `${minutesStr}:${secondsStr}`;
 };

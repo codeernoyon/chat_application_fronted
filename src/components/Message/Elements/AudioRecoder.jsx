@@ -1,10 +1,16 @@
+import { useStateProvider } from "@/context/StateContext";
+import { reducerCase } from "@/context/constants";
+import { AUDIOMESSAGE } from "@/utils/ApiRoutes";
 import { timeFormater } from "@/utils/TimeFormater";
+import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { BsFillPlayCircleFill, BsPauseCircle, BsSend } from "react-icons/bs";
 import WaveSurfer from "wavesurfer.js";
 
 const AudioRecorder = ({ isRecording, setIsRecording }) => {
+  const [{ userInfo, currentMessageUser, socket }, dispatch] =
+    useStateProvider();
   const [startRecording, setStartRecording] = useState(isRecording);
   const [stopRecorder, setStopRecorder] = useState(false);
   const [duration, setDuration] = useState(0);
@@ -28,7 +34,7 @@ const AudioRecorder = ({ isRecording, setIsRecording }) => {
 
       // collect audio all chucks
       const audioChunks = [];
-      mediaRecorderRef.current.addEventListener("dataavaliable", (e) => {
+      mediaRecorderRef.current.addEventListener("dataavailable", (e) => {
         audioChunks.push(e.data);
       });
 
@@ -37,6 +43,7 @@ const AudioRecorder = ({ isRecording, setIsRecording }) => {
         const audioFile = new File([audioBlob], "recording.mp3");
         setRenderAudio(audioFile);
         setIsPlaying(false);
+        waveSurfer.stop();
       });
     }
   };
@@ -57,9 +64,39 @@ const AudioRecorder = ({ isRecording, setIsRecording }) => {
       waveSurfer.play();
     }
   };
+  // handle send message
+  const handleSendAudio = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("audio", renderAudio);
+      const { data } = await axios.post(AUDIOMESSAGE, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        params: {
+          sender: userInfo._id,
+          receiver: currentMessageUser._id,
+        },
+      });
+      // socket event listener
+      socket.current.emit("send_message", {
+        ...data.data,
+      });
+      // add message live on global state
+      dispatch({
+        type: reducerCase.ADD_MESSAGE,
+        newMessage: { ...data.data },
+      });
+      setIsRecording(!isRecording);
+      setDuration(0);
+      setTotalDuration(0);
+      setStopRecorder(!stopRecorder);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   // create wave surfer
   useEffect(() => {
-    console.log("create");
     const wave = WaveSurfer.create({
       container: waveSurferRef.current,
       waveColor: "green",
@@ -73,7 +110,6 @@ const AudioRecorder = ({ isRecording, setIsRecording }) => {
     wave.on("finish", () => {
       setIsPlaying(false);
     });
-    console.log("finished");
 
     return () => {
       wave.destroy();
@@ -108,8 +144,9 @@ const AudioRecorder = ({ isRecording, setIsRecording }) => {
                 const audioUrl = URL.createObjectURL(blob);
                 const audio = new Audio(audioUrl);
                 setRecordedAudio(audio);
-                console.log(waveSurfer);
-                if (waveSurfer) waveSurfer.load(audioUrl);
+                if (waveSurfer) {
+                  waveSurfer.load(audioUrl);
+                }
               };
 
               mediaRecorder.start();
@@ -178,7 +215,10 @@ const AudioRecorder = ({ isRecording, setIsRecording }) => {
           </div>
         </div>
         {/* message send icon */}
-        <BsSend className="rotate-45 cursor-pointer" />
+        <BsSend
+          className="rotate-45 cursor-pointer"
+          onClick={handleSendAudio}
+        />
       </div>
       {/* pause icon */}
       <div className=" cursor-pointer w-fit">

@@ -8,6 +8,7 @@ export const initialState = {
   currentMessageUser: {},
   allMessages: [],
   socket: undefined,
+  loading: false,
 };
 
 export const reducer = (state, action) => {
@@ -59,6 +60,12 @@ export const reducer = (state, action) => {
       return {
         ...state,
         socket: action.socket,
+      };
+    // loading
+    case reducerCase.LOADING:
+      return {
+        ...state,
+        loading: action.loading,
       };
     default:
       return state;
