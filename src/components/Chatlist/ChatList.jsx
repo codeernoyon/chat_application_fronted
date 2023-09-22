@@ -1,5 +1,6 @@
 import { useStateProvider } from "@/context/StateContext";
 import ChatListHeader from "./ChatListHeader";
+import ChatListItems from "./Elements/ChatListItems";
 import ChatListSlide from "./Elements/ChatListSlide";
 
 function ChatList() {
@@ -13,6 +14,8 @@ function ChatList() {
       <ChatListSlide status={status} option={option} />
       {/* chat list header */}
       <ChatListHeader />
+      {/* all chat list items */}
+      <ChatListItems />
     </div>
   );
 }

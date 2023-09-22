@@ -7,6 +7,7 @@ import WaveSurfer from "wavesurfer.js";
 const AudioMessage = ({ message }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
+  const [totalDuration, setTotalDuration] = useState(0);
   const [audioMessage, setAudioMessage] = useState(null);
   //   references
   const waveMessageSurferRef = useRef(null);
@@ -31,7 +32,7 @@ const AudioMessage = ({ message }) => {
       if (waveFrom.current) {
         waveFrom.current.load(audioUrl);
         waveFrom.current.on("ready", () => {
-          setDuration(waveFrom.current.getDuration());
+          setTotalDuration(waveFrom.current.getDuration());
         });
       }
     };
@@ -59,6 +60,18 @@ const AudioMessage = ({ message }) => {
     };
   }, []);
 
+  //   play duration update
+  useEffect(() => {
+    if (audioMessage) {
+      const updateTime = () => {
+        setDuration(audioMessage.currentTime);
+      };
+      audioMessage.addEventListener("timeupdate", updateTime);
+      return () => {
+        audioMessage.removeEventListener("timeupdate", updateTime);
+      };
+    }
+  }, [audioMessage]);
   return (
     <div className=" px-5 py-1 flex gap-3 items-center text-[20px] w-fit">
       {/* play icon */}
@@ -84,7 +97,7 @@ const AudioMessage = ({ message }) => {
         {/* duration */}
         <div>
           <span className="text-sm text-slate-400">
-            {timeFormater(duration)}
+            {timeFormater(isPlaying ? duration : totalDuration)}
           </span>
         </div>
       </div>
