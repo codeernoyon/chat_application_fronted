@@ -8,4 +8,4 @@ export const GETUSERS = `${HOSTAPI}/allUsers`;
 export const SENDMESSAGE = `${HOSTAPI}/message`;
 export const GETALLMESSAGE = `${HOSTAPI}/getMessages`;
 export const AUDIOMESSAGE = `${HOSTAPI}/audioMessage`;
-export const ALLMESSAGESUSER = `${HOSTAPI}/allMessagesUser`;
+export const ALLMESSAGESUSER = `${HOSTAPI}/allMessagesUsers`;
