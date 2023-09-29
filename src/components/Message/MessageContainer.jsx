@@ -11,18 +11,20 @@ const AudioMessage = dynamic(() => import("./Elements/AudioMessage"), {
 });
 
 const MessageContainer = () => {
-  const [{ userInfo, currentMessageUser, allMessages }, dispatch] =
-    useStateProvider();
+  const [
+    { userInfo, currentMessageUser, currentMessageRead, allMessages, socket },
+    dispatch,
+  ] = useStateProvider();
   const [filterMessages, setFilterMessages] = useState(null);
-
+  const [oneTimeRunSocketEvent, setOneTimeRunSocketEvent] = useState(false);
   // ---------- import all messages from database ------
   useEffect(() => {
     const messages = allMessages.filter(
       (message) =>
-        (message.receiver === currentMessageUser._id &&
-          message.sender === userInfo._id) ||
-        (message.receiver === userInfo._id &&
-          message.sender === currentMessageUser._id)
+        (message?.receiver === currentMessageUser?._id &&
+          message?.sender === userInfo?._id) ||
+        (message?.receiver === userInfo?._id &&
+          message?.sender === currentMessageUser?._id)
     );
     setFilterMessages(messages);
   }, [allMessages]);
@@ -35,7 +37,7 @@ const MessageContainer = () => {
           <ul className="flex  flex-col gap-2 items-end overflow-hidden overflow-y-scroll px-5 py-2 h-[82.5vh] will-change-scroll://#region ">
             {filterMessages?.map((message) => (
               <li
-                key={message._id}
+                key={message?._id}
                 className={` w-fit px-3 rounded-xl flex gap-2 ${
                   currentMessageUser?._id === message.receiver
                     ? "self-end bg-green-900"
@@ -68,7 +70,7 @@ const MessageContainer = () => {
                 {message?.fileType === "audio" && (
                   <AudioMessage message={message} />
                 )}
-                {/* time && icon */}
+                {/* status */}
                 <div
                   className={`text-sm flex items-center gap-1 relative top-[10px] text-slate-400 ${
                     message?.fileType === "image" ? "self-end" : "self-start"
@@ -76,7 +78,7 @@ const MessageContainer = () => {
                 >
                   <span>{calculateTime(message?.createdAt)}</span>
                   {userInfo?._id === message?.sender && (
-                    <MessageStatus messageStatus={message?.status} />
+                    <MessageStatus messageStatus={message.status} />
                   )}
                 </div>
               </li>

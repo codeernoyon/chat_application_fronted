@@ -1,5 +1,4 @@
 import { useStateProvider } from "@/context/StateContext";
-import { reducerCase } from "@/context/constants";
 import { SENDMESSAGE } from "@/utils/ApiRoutes";
 import axios from "axios";
 import { useState } from "react";
@@ -12,6 +11,7 @@ import SendMessage from "./Elements/SendMessage";
 const MessageSender = () => {
   const [{ userInfo, currentMessageUser, socket }, dispatch] =
     useStateProvider();
+
   const [message, setMessage] = useState("");
   const [isRecording, setIsRecording] = useState(false);
 
@@ -31,11 +31,10 @@ const MessageSender = () => {
       socket.current.emit("send_message", {
         ...data.data,
       });
-      // add message live on global state
-      dispatch({
-        type: reducerCase.ADD_MESSAGE,
-        newMessage: { ...data.data },
-      });
+      // socket event listener
+      // socket.current.emit("update_message", {
+      //   ...data.data,
+      // });
     } catch (error) {
       console.log(error);
     }

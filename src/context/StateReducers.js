@@ -7,8 +7,15 @@ export const initialState = {
   allUsersFromDb: [],
   currentMessageUser: {},
   allMessages: [],
+  onlineUsers: [],
   socket: undefined,
+  currentMessageRead: {},
   loading: false,
+  voiceCall: undefined,
+  videoCall: undefined,
+  incomingVoiceCall: undefined,
+  incomingVideoCall: undefined,
+  endCall: undefined,
 };
 
 export const reducer = (state, action) => {
@@ -61,11 +68,56 @@ export const reducer = (state, action) => {
         ...state,
         socket: action.socket,
       };
+    // online users
+    case reducerCase.ONLINE_USERS:
+      return {
+        ...state,
+        onlineUsers: action.onlineUsers,
+      };
+    // CURRENT MESSAGE READ
+    case reducerCase.CURRENT_MESSAGE_READ:
+      return {
+        ...state,
+        currentMessageRead: action.currentMessageRead,
+      };
     // loading
     case reducerCase.LOADING:
       return {
         ...state,
         loading: action.loading,
+      };
+    // voice call
+    case reducerCase.VOICE_CALL:
+      return {
+        ...state,
+        voiceCall: action.voiceCall,
+      };
+    //  video call
+    case reducerCase.VIDEO_CALL:
+      return {
+        ...state,
+        videoCall: action.videoCall,
+      };
+    // incoming voice call
+    case reducerCase.INCOMING_VOICE_CALL:
+      return {
+        ...state,
+        incomingVoiceCall: action.incomingVoiceCall,
+      };
+    // incoming video call
+    case reducerCase.INCOMING_VIDEO_CALL:
+      return {
+        ...state,
+        incomingVideoCall: action.incomingVideoCall,
+      };
+    // end call
+    case reducerCase.END_CALL:
+      return {
+        ...state,
+        voiceCall: undefined,
+        videoCall: undefined,
+        incomingVideoCall: undefined,
+        incomingVoiceCall: undefined,
       };
     default:
       return state;

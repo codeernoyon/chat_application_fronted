@@ -1,9 +1,11 @@
-import { BsTelephone } from "react-icons/bs";
+import { useStateProvider } from "@/context/StateContext";
+import Container from "./Container";
 
 function VoiceCall() {
+  const [{ voiceCall }] = useStateProvider();
   return (
-    <div className="cursor-pointer">
-      <BsTelephone />
+    <div className="h-screen w-full">
+      <Container data={voiceCall} />
     </div>
   );
 }

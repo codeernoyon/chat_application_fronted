@@ -9,12 +9,17 @@ import { BiSolidMicrophone } from "react-icons/bi";
 import { BsImage } from "react-icons/bs";
 
 const ChatListItems = () => {
-  const [{ userInfo }, dispatch] = useStateProvider();
+  const [{ userInfo, socket }, dispatch] = useStateProvider();
   const [allUsers, setAllUsers] = useState([]);
+  const [emptyUnReadeMessages, setEmptyUnReadeMessages] = useState(false);
 
   // -------- handle profile click function -----------
   const handleProfileClick = async (e, user) => {
     e.stopPropagation();
+    setEmptyUnReadeMessages(true);
+
+    // socket for active chat user
+    socket.current.emit("active_user", user?._id);
 
     // set user for start loading
     dispatch({
@@ -51,18 +56,21 @@ const ChatListItems = () => {
       console.log(error);
     }
   };
-
+  // get all messages users
   useEffect(() => {
     const getAllUsers = async () => {
-      console.log(`${ALLMESSAGESUSER}/${userInfo?._id}`);
       try {
         const { data } = await axios.get(`${ALLMESSAGESUSER}/${userInfo?._id}`);
         setAllUsers(data.users);
-
-        // set data for global state
+        // set all messages users data for global state
         dispatch({
           type: reducerCase.ALL_USERS_FROM_DB,
           allUsersFromDb: allUsers,
+        });
+        // set online users data for global state
+        dispatch({
+          type: reducerCase.ONLINE_USERS,
+          onlineUsers: data.onlineUsers,
         });
       } catch (error) {
         console.log(error);
@@ -71,13 +79,16 @@ const ChatListItems = () => {
     if (userInfo) getAllUsers();
   }, []);
   return (
-    <div className="pb-10">
+    <div className="pb-10 pt-5">
       <div className="overflow-y-scroll h-[80vh] ">
         {allUsers?.map((item) => (
-          <div key={item.user[0]?._id} className="my-5">
+          <div
+            key={item.user[0]?._id}
+            className=" border-b-[1px] border-slate-800"
+          >
             {/* ------ profile section ------- */}
             <div
-              className="p-5 flex items-center gap-5 hover:bg-panel-header-background2 cursor-pointer"
+              className="relative p-5 flex items-center gap-5 hover:bg-panel-header-background2 cursor-pointer w-full"
               onClick={(e) => handleProfileClick(e, item.user[0])}
             >
               {/* image */}
@@ -119,6 +130,16 @@ const ChatListItems = () => {
                   {/*  */}
                 </span>
               </div>
+              {/* pending message seen*/}
+              {item.totalUnreadMessages > 0 && (
+                <div className="absolute top-[50%] right-10 translate-y-[-50%] rounded-full bg-green-700 h-6 w-6 flex justify-center items-center">
+                  <span className="text-sm">
+                    {emptyUnReadeMessages
+                      ? (item.totalUnreadMessages = 0)
+                      : item.totalUnreadMessages}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         ))}

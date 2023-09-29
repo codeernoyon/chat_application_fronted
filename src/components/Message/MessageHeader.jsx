@@ -1,12 +1,36 @@
 import { useStateProvider } from "@/context/StateContext";
+import { reducerCase } from "@/context/constants";
 import Image from "next/image";
-import { BsChevronDown } from "react-icons/bs";
+import { BsCameraVideo, BsChevronDown, BsTelephone } from "react-icons/bs";
 import { MdSearch } from "react-icons/md";
-import VideoCall from "../Call/VideoCall";
-import VoiceCall from "../Call/VoiceCall";
 
 const MessageHeader = () => {
-  const [{ currentMessageUser }] = useStateProvider();
+  const [{ currentMessageUser }, dispatch] = useStateProvider();
+
+  // handle audio call
+  const handleVoiceCall = () => {
+    dispatch({
+      type: reducerCase.VOICE_CALL,
+      voiceCall: {
+        ...currentMessageUser,
+        type: "out_going",
+        callType: "voiceCall",
+        roomId: Date.now(),
+      },
+    });
+  };
+  // handle video call
+  const handleVideoCall = () => {
+    dispatch({
+      type: reducerCase.VIDEO_CALL,
+      videoCall: {
+        ...currentMessageUser,
+        type: "out_going",
+        callType: "videoCall",
+        roomId: Date.now(),
+      },
+    });
+  };
   return (
     <div className="py-2 px-5 pr-8 bg-panel-header-background2 flex justify-between items-center">
       {/* --------- image & status ---------- */}
@@ -31,9 +55,13 @@ const MessageHeader = () => {
       {/* ----------- right side call & search & setting ---------- */}
       <div className="text-[20px] flex items-center gap-10 text-slate-400">
         {/* it's video component added from Call folder  */}
-        <VideoCall />
+        <div className="cursor-pointer" onClick={handleVideoCall}>
+          <BsCameraVideo />
+        </div>
         {/* it's audio component added from Call folder  */}
-        <VoiceCall />
+        <div className="cursor-pointer" onClick={handleVoiceCall}>
+          <BsTelephone />
+        </div>
         {/* ber */}
         <div className="h-[25px] w-[2px] bg-slate-600"></div>
         {/* search icon */}

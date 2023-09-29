@@ -1,9 +1,11 @@
-import { BsCameraVideo } from "react-icons/bs";
+import { useStateProvider } from "@/context/StateContext";
+import Container from "./Container";
 
 function VideoCall() {
+  const [{ videoCall }] = useStateProvider();
   return (
-    <div className="cursor-pointer">
-      <BsCameraVideo />
+    <div className="h-screen w-full">
+      <Container data={videoCall} />
     </div>
   );
 }
