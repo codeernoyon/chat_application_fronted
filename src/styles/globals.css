@@ -6,6 +6,11 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+  background-color: #111b21;
+  overflow: hidden;
 }
 * {
   margin: 0;

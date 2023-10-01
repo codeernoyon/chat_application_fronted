@@ -32,10 +32,10 @@ function Layout({ children }) {
       </Head>
       <Loading />
       <main
-        className={`min-h-screen min-w-screen   flex justify-center items-center bg-panel-header-background ${roboto.className} overflow-hidden`}
+        className={`min-h-screen w-[1450px]   flex justify-center items-center bg-panel-header-background ${roboto.className} `}
       >
         {/* container div */}
-        <div className="h-full w-[1450px] overflow-hidden ">
+        <div className="h-full w-full overflow-hidden ">
           <Toaster
             toastOptions={{
               // Define default options

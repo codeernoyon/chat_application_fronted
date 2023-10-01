@@ -5,7 +5,7 @@ import { useState } from "react";
 import { BsTelephoneFill } from "react-icons/bs";
 
 function Container({ data }) {
-  const [{}, dispatch] = useStateProvider();
+  const [{ voiceCall }, dispatch] = useStateProvider();
   const [acceptCall, setAcceptCall] = useState(false);
   // handle end call
   const handleEndCall = () => {
@@ -13,6 +13,7 @@ function Container({ data }) {
       type: reducerCase.END_CALL,
     });
   };
+
   return (
     <div className="h-full w-full flex justify-center items-center flex-col gap-7 relative">
       {/* name */}
