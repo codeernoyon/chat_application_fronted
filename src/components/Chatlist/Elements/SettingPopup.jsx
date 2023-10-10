@@ -49,7 +49,7 @@ const SettingPopup = ({ setShowSetting, setShowSlideData }) => {
   };
 
   return (
-    <div className="absolute w-[200px] top-[50px] right-0 border-[1px] border-green-600 bg-panel-header-background2 rounded-lg py-3">
+    <div className="absolute w-[200px] top-[50px] right-0 border-[1px] border-green-600 bg-panel-header-background2 rounded-lg py-3 z-[9999]">
       <ul className="w-full flex flex-col">
         {showSettingPopupData?.map(({ title, callback, option }, index) => (
           <li

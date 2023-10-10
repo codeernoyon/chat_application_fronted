@@ -9,7 +9,7 @@ import { BiSolidMicrophone } from "react-icons/bi";
 import { BsImage } from "react-icons/bs";
 
 const ChatListItems = () => {
-  const [{ userInfo, socket }, dispatch] = useStateProvider();
+  const [{ userInfo, socket, allMessages }, dispatch] = useStateProvider();
   const [allUsers, setAllUsers] = useState([]);
   const [emptyUnReadeMessages, setEmptyUnReadeMessages] = useState(false);
 
@@ -17,9 +17,6 @@ const ChatListItems = () => {
   const handleProfileClick = async (e, user) => {
     e.stopPropagation();
     setEmptyUnReadeMessages(true);
-
-    // socket for active chat user
-    socket.current.emit("active_user", user?._id);
 
     // set user for start loading
     dispatch({
@@ -77,7 +74,7 @@ const ChatListItems = () => {
       }
     };
     if (userInfo) getAllUsers();
-  }, []);
+  }, [allMessages]);
   return (
     <div className="pb-10 pt-5">
       <div className="overflow-y-scroll h-[80vh] ">
@@ -134,9 +131,7 @@ const ChatListItems = () => {
               {item.totalUnreadMessages > 0 && (
                 <div className="absolute top-[50%] right-10 translate-y-[-50%] rounded-full bg-green-700 h-6 w-6 flex justify-center items-center">
                   <span className="text-sm">
-                    {emptyUnReadeMessages
-                      ? (item.totalUnreadMessages = 0)
-                      : item.totalUnreadMessages}
+                    {emptyUnReadeMessages && item.totalUnreadMessages}
                   </span>
                 </div>
               )}

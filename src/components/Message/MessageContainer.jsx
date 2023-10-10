@@ -11,12 +11,9 @@ const AudioMessage = dynamic(() => import("./Elements/AudioMessage"), {
 });
 
 const MessageContainer = () => {
-  const [
-    { userInfo, currentMessageUser, currentMessageRead, allMessages, socket },
-    dispatch,
-  ] = useStateProvider();
+  const [{ userInfo, currentMessageUser, allMessages }, dispatch] =
+    useStateProvider();
   const [filterMessages, setFilterMessages] = useState(null);
-  const [oneTimeRunSocketEvent, setOneTimeRunSocketEvent] = useState(false);
   // ---------- import all messages from database ------
   useEffect(() => {
     const messages = allMessages.filter(
@@ -28,7 +25,6 @@ const MessageContainer = () => {
     );
     setFilterMessages(messages);
   }, [allMessages]);
-
   return (
     <div className="h-[82.5vh]">
       <div className="relative h-full bg-chat-background bg-opacity-35 before:absolute before:top-0 before:h-full before:w-full before:bg-panel-header-background before:bg-opacity-95 before:z-[10] bg-fixed overflow-hidden">

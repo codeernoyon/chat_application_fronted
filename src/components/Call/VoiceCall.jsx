@@ -5,7 +5,7 @@ import Container from "./Container";
 function VoiceCall() {
   const [{ userInfo, voiceCall, socket }] = useStateProvider();
   useEffect(() => {
-    if (voiceCall.type === "out-going") {
+    if (voiceCall.type === "out_going") {
       socket.current.emit("outgoing_voice_call", {
         receiver: voiceCall._id,
         sender: {

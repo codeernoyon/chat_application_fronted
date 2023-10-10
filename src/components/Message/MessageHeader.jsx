@@ -1,11 +1,13 @@
 import { useStateProvider } from "@/context/StateContext";
 import { reducerCase } from "@/context/constants";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { BsCameraVideo, BsChevronDown, BsTelephone } from "react-icons/bs";
 import { MdSearch } from "react-icons/md";
 
 const MessageHeader = () => {
-  const [{ currentMessageUser }, dispatch] = useStateProvider();
+  const [{ currentMessageUser, onlineUsers }, dispatch] = useStateProvider();
+  const [active, setActive] = useState(false);
 
   // handle audio call
   const handleVoiceCall = () => {
@@ -15,7 +17,7 @@ const MessageHeader = () => {
         ...currentMessageUser,
         type: "out_going",
         callType: "voiceCall",
-        roomId: Date.now(),
+        roomId: (Date.now() * (Math.random() * 10)) / 2,
       },
     });
   };
@@ -31,6 +33,13 @@ const MessageHeader = () => {
       },
     });
   };
+  useEffect(() => {
+    onlineUsers.map((user) => {
+      if (user === currentMessageUser._id) {
+        setActive(true);
+      }
+    });
+  }, [onlineUsers]);
   return (
     <div className="py-2 px-5 pr-8 bg-panel-header-background2 flex justify-between items-center">
       {/* --------- image & status ---------- */}
@@ -49,7 +58,9 @@ const MessageHeader = () => {
             {currentMessageUser?.name}
           </span>
           {/* active status */}
-          <span className="text-sm text-slate-500">active status</span>
+          <span className="text-sm text-slate-500">
+            {active ? "Online" : "Offline"}
+          </span>
         </div>
       </div>
       {/* ----------- right side call & search & setting ---------- */}

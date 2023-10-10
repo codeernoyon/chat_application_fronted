@@ -16,6 +16,9 @@ export const initialState = {
   incomingVoiceCall: undefined,
   incomingVideoCall: undefined,
   endCall: undefined,
+  WRTCPeer:undefined,
+  WRTCOffer:undefined,
+  WRTCAnswer:undefined
 };
 
 export const reducer = (state, action) => {
@@ -118,6 +121,24 @@ export const reducer = (state, action) => {
         videoCall: undefined,
         incomingVideoCall: undefined,
         incomingVoiceCall: undefined,
+      };
+      // WRTC Peer set
+      case reducerCase.WRTC_PEER:
+      return {
+        ...state,
+        WRTCPeer:action.WRTCPeer
+      };
+      // WRTC Peer set
+      case reducerCase.WRTC_OFFER:
+      return {
+        ...state,
+        WRTCOffer:action.WRTCOffer
+      };
+      // WRTC Peer set
+      case reducerCase.WRTC_ANSWER:
+      return {
+        ...state,
+        WRTCAnswer:action.WRTCAnswer
       };
     default:
       return state;

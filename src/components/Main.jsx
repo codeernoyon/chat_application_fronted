@@ -1,4 +1,5 @@
 import { useStateProvider } from "@/context/StateContext";
+import { usePeer } from "@/context/WebRTC";
 import { reducerCase } from "@/context/constants";
 import { HOST } from "@/utils/ApiRoutes";
 import { useEffect, useRef, useState } from "react";
@@ -7,12 +8,20 @@ import VideoCall from "./Call/VideoCall";
 import VoiceCall from "./Call/VoiceCall";
 import ChatList from "./Chatlist/ChatList";
 import Message from "./Message/Message";
-import IncomingCall from "./common/IncomingCall";
 import IncomingVideoCall from "./common/IncomingVideoCall";
+import IncomingVoiceCall from "./common/IncomingVoiceCall";
 
 function Main() {
+  const { setRemoteAns } = usePeer();
   const [
-    { userInfo, voiceCall, videoCall, incomingVoiceCall, incomingVideoCall },
+    {
+      userInfo,
+      voiceCall,
+      videoCall,
+      incomingVoiceCall,
+      incomingVideoCall,
+      WRTCPeer,
+    },
     dispatch,
   ] = useStateProvider();
   const socket = useRef();
@@ -62,18 +71,24 @@ function Main() {
         }
       );
       /**
+       * it's event for incoming accept && set answer call
+       */
+      socket.current.on("accept_call", async ({ answer }) => {
+        await setRemoteAns(answer);
+      });
+      /**
        * it's event for incoming video call
        */
       socket.current.on(
         "incoming_video_call",
-        ({ sender, roomId, callType }) => {
-          console.log(sender);
+        ({ sender, roomId, callType, offer }) => {
           dispatch({
             type: reducerCase.INCOMING_VIDEO_CALL,
             incomingVideoCall: {
               ...sender,
               roomId,
               callType,
+              offer,
             },
           });
         }
@@ -95,13 +110,13 @@ function Main() {
         });
       });
       setOneTimeRunSocketEvent(true);
+      return () => {};
     }
-  }, [socket.current]);
-
+  }, [userInfo, socket.current]);
   return (
     <div className="w-full h-full relative grid grid-flow-col text-slate-300">
+      {incomingVoiceCall && <IncomingVoiceCall />}
       {incomingVideoCall && <IncomingVideoCall />}
-      {incomingVoiceCall && <IncomingCall />}
       {voiceCall && <VoiceCall />}
       {videoCall && <VideoCall />}
       {!voiceCall && !videoCall && (

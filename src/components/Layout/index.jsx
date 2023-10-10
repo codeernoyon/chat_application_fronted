@@ -1,4 +1,6 @@
 "use client";
+import { useStateProvider } from "@/context/StateContext";
+import { PeerProvider } from "@/context/WebRTC";
 import { Roboto } from "next/font/google";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -13,8 +15,10 @@ const roboto = Roboto({
 });
 
 function Layout({ children }) {
+  const [{}, dispatch] = useStateProvider();
   const [user, setUser] = useState(null);
   const router = useRouter();
+
   useEffect(() => {
     const dUser = JSON.parse(localStorage.getItem("User"));
     setUser(dUser);
@@ -24,8 +28,9 @@ function Layout({ children }) {
       router.push("/login");
     }
   }, []);
+
   return (
-    <>
+    <PeerProvider>
       <Head>
         <title>What's app clone</title>
         <link rel="shortcut icon" href="/favicon.png" />
@@ -53,7 +58,7 @@ function Layout({ children }) {
           {children}
         </div>
       </main>
-    </>
+    </PeerProvider>
   );
 }
 

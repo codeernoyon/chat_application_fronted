@@ -1,4 +1,5 @@
 import { useStateProvider } from "@/context/StateContext";
+import { reducerCase } from "@/context/constants";
 import { SENDMESSAGE } from "@/utils/ApiRoutes";
 import axios from "axios";
 import { useState } from "react";
@@ -27,14 +28,14 @@ const MessageSender = () => {
         receiver: currentMessageUser?._id,
         fileType: "text",
       });
+      dispatch({
+        type: reducerCase.ADD_MESSAGE,
+        newMessage: { ...data.data },
+      });
       // socket event listener
       socket.current.emit("send_message", {
         ...data.data,
       });
-      // socket event listener
-      // socket.current.emit("update_message", {
-      //   ...data.data,
-      // });
     } catch (error) {
       console.log(error);
     }

@@ -58,7 +58,7 @@ function login() {
       toast.success("Login successfully");
       router.push("/");
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
       toast.error("Something was wrong");
     }
   };
