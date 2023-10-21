@@ -37,24 +37,26 @@ function Layout({ children }) {
       </Head>
       <Loading />
       <main
-        className={`min-h-screen w-[1450px]   flex justify-center items-center bg-panel-header-background ${roboto.className} `}
+        className={`h-screen w-screen xl:w-[1450px] xl:flex justify-center items-center bg-panel-header-background ${roboto.className} `}
       >
         {/* container div */}
-        <div className="h-full w-full overflow-hidden ">
-          <Toaster
-            toastOptions={{
-              // Define default options
-              duration: 3000,
-              className: "",
-              style: {
-                background: "#182229",
-                color: "#fff",
-                borderWidth: "2px",
-                borderColor: "green",
-                padding: "10px",
-              },
-            }}
-          />
+        <div className="h-full w-full overflow-hidden relative">
+          <div className="relative z-[99992]">
+            <Toaster
+              toastOptions={{
+                // Define default options
+                duration: 3000,
+                className: "",
+                style: {
+                  background: "#182229",
+                  color: "#fff",
+                  borderWidth: "2px",
+                  borderColor: "green",
+                  padding: "10px",
+                },
+              }}
+            />
+          </div>
           {children}
         </div>
       </main>

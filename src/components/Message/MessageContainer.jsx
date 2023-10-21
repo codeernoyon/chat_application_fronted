@@ -2,10 +2,7 @@ import { useStateProvider } from "@/context/StateContext";
 import { calculateTime } from "@/utils/CalculateTime";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-const MessageStatus = dynamic(() => import("../common/MessageStatus"), {
-  ssr: false,
-});
+import MessageStatus from "../common/MessageStatus";
 const AudioMessage = dynamic(() => import("./Elements/AudioMessage"), {
   ssr: false,
 });
@@ -13,25 +10,15 @@ const AudioMessage = dynamic(() => import("./Elements/AudioMessage"), {
 const MessageContainer = () => {
   const [{ userInfo, currentMessageUser, allMessages }, dispatch] =
     useStateProvider();
-  const [filterMessages, setFilterMessages] = useState(null);
-  // ---------- import all messages from database ------
-  useEffect(() => {
-    const messages = allMessages.filter(
-      (message) =>
-        (message?.receiver === currentMessageUser?._id &&
-          message?.sender === userInfo?._id) ||
-        (message?.receiver === userInfo?._id &&
-          message?.sender === currentMessageUser?._id)
-    );
-    setFilterMessages(messages);
-  }, [allMessages]);
   return (
-    <div className="h-[82.5vh]">
-      <div className="relative h-full bg-chat-background bg-opacity-35 before:absolute before:top-0 before:h-full before:w-full before:bg-panel-header-background before:bg-opacity-95 before:z-[10] bg-fixed overflow-hidden">
+    <div className="h-[82.5vh] bg-panel-header-background">
+      <div className="relative h-full bg-chat-background before:absolute before:top-0 before:h-full before:w-full before:bg-panel-header-background before:bg-opacity-95 before:z-[10] bg-fixed overflow-hidden">
         {/* --------- container ----- */}
-        <div className="relative z-[11] ">
-          <ul className="flex  flex-col gap-2 items-end overflow-hidden overflow-y-scroll px-5 py-2 h-[82.5vh] will-change-scroll://#region ">
-            {filterMessages?.map((message) => (
+        <div className="relative z-[11]">
+          <ul
+            className={`relative flex gap-2 flex-col px-5 py-2 h-[82.5vh] overflow-y-scroll overflow-x-hidden scroll-smooth scroll://#endregion`}
+          >
+            {allMessages?.map((message) => (
               <li
                 key={message?._id}
                 className={` w-fit px-3 rounded-xl flex gap-2 ${

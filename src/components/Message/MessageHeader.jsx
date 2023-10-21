@@ -2,12 +2,13 @@ import { useStateProvider } from "@/context/StateContext";
 import { reducerCase } from "@/context/constants";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { AiOutlineArrowLeft } from "react-icons/ai";
 import { BsCameraVideo, BsChevronDown, BsTelephone } from "react-icons/bs";
 import { MdSearch } from "react-icons/md";
 
 const MessageHeader = () => {
   const [{ currentMessageUser, onlineUsers }, dispatch] = useStateProvider();
-  const [active, setActive] = useState(false);
+  const [active, setActive] = useState(null);
 
   // handle audio call
   const handleVoiceCall = () => {
@@ -33,33 +34,43 @@ const MessageHeader = () => {
       },
     });
   };
-  useEffect(() => {
-    onlineUsers.map((user) => {
-      if (user === currentMessageUser._id) {
-        setActive(true);
-      }
+  // handle Close Message
+  const handleCloseMessage = () => {
+    dispatch({
+      type: reducerCase.SHOWSMDEVICEMESSAGE,
+      showSmDeviceMessage: false,
     });
+  };
+  useEffect(() => {
+    const us = onlineUsers.filter((user) => user === currentMessageUser._id);
+    setActive(...us);
   }, [onlineUsers]);
   return (
-    <div className="py-2 px-5 pr-8 bg-panel-header-background2 flex justify-between items-center">
+    <div className="py-2 px-2 xl:px-5 pr-8 bg-panel-header-background2 flex justify-between items-center">
       {/* --------- image & status ---------- */}
       <div className="flex items-center gap-5">
-        {/* image */}
-        <Image
-          src={currentMessageUser?.imageUrl}
-          alt="photo"
-          height={50}
-          width={50}
-          className="rounded-full"
-        />
+        {/* back button */}
+        <div className="flex items-center gap-2">
+          <span className="text-[22px] cursor-pointer xl:hidden">
+            <AiOutlineArrowLeft onClick={handleCloseMessage} />
+          </span>
+          {/* image */}
+          <Image
+            src={currentMessageUser?.imageUrl}
+            alt="photo"
+            height={50}
+            width={50}
+            className="rounded-full"
+          />
+        </div>
         <div className="flex flex-col">
           {/* name */}
           <span className="text-[18px] font-medium">
             {currentMessageUser?.name}
           </span>
           {/* active status */}
-          <span className="text-sm text-slate-500">
-            {active ? "Online" : "Offline"}
+          <span className="text-sm text-slate-400">
+            {active === currentMessageUser?._id ? "Online" : "Offline"}
           </span>
         </div>
       </div>
@@ -74,13 +85,13 @@ const MessageHeader = () => {
           <BsTelephone />
         </div>
         {/* ber */}
-        <div className="h-[25px] w-[2px] bg-slate-600"></div>
+        <div className="h-[25px] w-[2px] bg-slate-600 hidden xl:block"></div>
         {/* search icon */}
-        <div className="text-[25px] cursor-pointer">
+        <div className="text-[25px] cursor-pointer hidden xl:block">
           <MdSearch />
         </div>
         {/* down icon for setting options */}
-        <div className="text-inherit cursor-pointer">
+        <div className="text-inherit cursor-pointer hidden xl:block">
           <BsChevronDown />
         </div>
       </div>

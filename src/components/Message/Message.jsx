@@ -6,12 +6,18 @@ import MessageHeader from "./MessageHeader";
 import MessageSender from "./MessageSender";
 const MessageContainer = dynamic(() => import("./MessageContainer"), {
   loading: () => <LoadingBar />,
+  ssr: false,
 });
 
 const Message = () => {
-  const [{ showMessageCurrentUser, loading }] = useStateProvider();
+  const [{ showMessageCurrentUser, loading, showSmDeviceMessage }] =
+    useStateProvider();
   return (
-    <div className="col-span-9 w-full  ">
+    <div
+      className={`h-screen w-screen xl:h-full xl:w-full absolute top-0 left-[-105%] xl:left-0 xl:relative xl:col-span-9 ${
+        showSmDeviceMessage ? "z-[99991] left-[0%]" : "z-[0]"
+      }`}
+    >
       {showMessageCurrentUser ? (
         <>
           <MessageHeader />

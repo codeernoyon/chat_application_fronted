@@ -23,13 +23,15 @@ function Container({ data }) {
     });
   };
   const getStream = async () => {
-    const strm = await navigator.mediaDevices.getUserMedia({
-      audio: true,
-      video: true,
-    });
+    if (data.callType === "videoCall") {
+      const strm = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: true,
+      });
 
-    sendStream(strm);
-    setStream(strm);
+      sendStream(strm);
+      setStream(strm);
+    }
   };
   useEffect(() => {
     getStream();
@@ -45,7 +47,7 @@ function Container({ data }) {
             playing
             width={remoteStream ? "30%" : "100%"}
             height={remoteStream ? "30%" : "100%"}
-            className={`absolute ${
+            className={`fixed text-center h-[100vh] ${
               remoteStream ? "right-10 top-10" : "top-0 left-0"
             } z-[2]`}
           />

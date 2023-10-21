@@ -17,7 +17,11 @@ const ChatListItems = () => {
   const handleProfileClick = async (e, user) => {
     e.stopPropagation();
     setEmptyUnReadeMessages(true);
-
+    // set show message s device
+    dispatch({
+      type: reducerCase.SHOWSMDEVICEMESSAGE,
+      showSmDeviceMessage: true,
+    });
     // set user for start loading
     dispatch({
       type: reducerCase.LOADING,

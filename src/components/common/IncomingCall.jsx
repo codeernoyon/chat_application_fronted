@@ -3,7 +3,7 @@ import Button from "./Button";
 
 function IncomingCall({ callData, handleAcceptCall, handleRejectCall }) {
   return (
-    <div className="fixed right-10 top-20 px-12 py-7 border-[2px] border-green-600 rounded-xl bg-panel-header-background z-[999]">
+    <div className="fixed right-10 top-20 px-5 xl:px-12 py-3 xl:py-7 border-[2px] border-green-600 rounded-xl bg-panel-header-background z-[999]">
       <div className="h-full w-full flex flex-col gap-5">
         {/* ------- info -------- */}
         <div className="flex items-center gap-5">

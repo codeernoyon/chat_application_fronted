@@ -9,16 +9,16 @@ export const initialState = {
   allMessages: [],
   onlineUsers: [],
   socket: undefined,
-  currentMessageRead: {},
+  showSmDeviceMessage: false,
   loading: false,
   voiceCall: undefined,
   videoCall: undefined,
   incomingVoiceCall: undefined,
   incomingVideoCall: undefined,
   endCall: undefined,
-  WRTCPeer:undefined,
-  WRTCOffer:undefined,
-  WRTCAnswer:undefined
+  WRTCPeer: undefined,
+  WRTCOffer: undefined,
+  WRTCAnswer: undefined,
 };
 
 export const reducer = (state, action) => {
@@ -77,11 +77,11 @@ export const reducer = (state, action) => {
         ...state,
         onlineUsers: action.onlineUsers,
       };
-    // CURRENT MESSAGE READ
-    case reducerCase.CURRENT_MESSAGE_READ:
+    // SHOW SM DEVICE MESSAGE
+    case reducerCase.SHOWSMDEVICEMESSAGE:
       return {
         ...state,
-        currentMessageRead: action.currentMessageRead,
+        showSmDeviceMessage: action.showSmDeviceMessage,
       };
     // loading
     case reducerCase.LOADING:
@@ -122,23 +122,23 @@ export const reducer = (state, action) => {
         incomingVideoCall: undefined,
         incomingVoiceCall: undefined,
       };
-      // WRTC Peer set
-      case reducerCase.WRTC_PEER:
+    // WRTC Peer set
+    case reducerCase.WRTC_PEER:
       return {
         ...state,
-        WRTCPeer:action.WRTCPeer
+        WRTCPeer: action.WRTCPeer,
       };
-      // WRTC Peer set
-      case reducerCase.WRTC_OFFER:
+    // WRTC Peer set
+    case reducerCase.WRTC_OFFER:
       return {
         ...state,
-        WRTCOffer:action.WRTCOffer
+        WRTCOffer: action.WRTCOffer,
       };
-      // WRTC Peer set
-      case reducerCase.WRTC_ANSWER:
+    // WRTC Peer set
+    case reducerCase.WRTC_ANSWER:
       return {
         ...state,
-        WRTCAnswer:action.WRTCAnswer
+        WRTCAnswer: action.WRTCAnswer,
       };
     default:
       return state;

@@ -2,7 +2,7 @@ import { AiTwotoneLock } from "react-icons/ai";
 
 const EmptyMessage = () => {
   return (
-    <div className="w-full h-full sm:hidden md:flex justify-center items-center  bg-secondary border-b-[3px] border-emerald-600 flex-col text-slate-400">
+    <div className="w-full h-full hidden xl:flex justify-center items-center  bg-secondary border-b-[3px] border-emerald-600 flex-col text-slate-400">
       {/* image */}
       <div>
         <svg

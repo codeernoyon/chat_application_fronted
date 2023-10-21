@@ -42,7 +42,7 @@ const MessageSender = () => {
   };
 
   return (
-    <div className="bg-panel-header-background2 py-3 px-8 relative w-full overflow-hidden">
+    <div className="bg-panel-header-background2 py-4 xl:py-3 px-5 relative w-full overflow-hidden">
       {/* container */}
       {isRecording ? (
         <AudioRecorder

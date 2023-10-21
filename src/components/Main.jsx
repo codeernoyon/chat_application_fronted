@@ -1,7 +1,8 @@
 import { useStateProvider } from "@/context/StateContext";
 import { usePeer } from "@/context/WebRTC";
 import { reducerCase } from "@/context/constants";
-import { HOST } from "@/utils/ApiRoutes";
+import { HOST, UPDATEMESSAGES } from "@/utils/ApiRoutes";
+import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import VideoCall from "./Call/VideoCall";
@@ -29,14 +30,23 @@ function Main() {
 
   // socket io set for client and add global state
   useEffect(() => {
-    if (userInfo) {
-      socket.current = io(HOST);
-      socket.current.emit("add_user", userInfo._id);
-      dispatch({
-        type: reducerCase.SET_SOCKET,
-        socket,
-      });
-    }
+    const handleFunction = async () => {
+      if (userInfo) {
+        socket.current = io(HOST);
+        socket.current.emit("add_user", userInfo._id);
+        dispatch({
+          type: reducerCase.SET_SOCKET,
+          socket,
+        });
+        try {
+          // api hit url and get all messages
+          await axios.get(`${UPDATEMESSAGES}/${userInfo?._id}`);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+    handleFunction();
   }, [userInfo]);
 
   // one time run socket event
@@ -114,7 +124,7 @@ function Main() {
     }
   }, [userInfo, socket.current]);
   return (
-    <div className="w-full h-full relative grid grid-flow-col text-slate-300">
+    <div className="w-full h-full relative xl:grid xl:grid-flow-col text-slate-300">
       {incomingVoiceCall && <IncomingVoiceCall />}
       {incomingVideoCall && <IncomingVideoCall />}
       {voiceCall && <VoiceCall />}
