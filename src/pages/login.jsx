@@ -35,6 +35,7 @@ function login() {
     const {
       user: { displayName: name, email, photoURL: imageUrl },
     } = await signInWithPopup(auth, provider);
+    console.log(name, email);
     try {
       // call api for send data backend and get response with data
       const res = await axios.post(USER, {
